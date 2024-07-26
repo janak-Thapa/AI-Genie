@@ -11,6 +11,8 @@ export async function POST(req: Request) {
     }
 
     const { title, description, templateUsed } = await req.json();
+    
+    console.log("Received data:", { title, description, templateUsed });
 
     const createNewOutput = await db.aIOutput.create({
       data: {
@@ -20,6 +22,8 @@ export async function POST(req: Request) {
         templateUsed,
       },
     });
+
+    console.log("Created new output:", createNewOutput);
 
     revalidatePath("/");
 

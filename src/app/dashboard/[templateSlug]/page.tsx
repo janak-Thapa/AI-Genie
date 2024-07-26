@@ -15,39 +15,42 @@ interface TemplateSlugProps {
 
 const TemplateSlug = ({ params }: { params: TemplateSlugProps }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [aiOutput,setAIOutput] = useState<string>("")
+  const [aiOutput, setAIOutput] = useState<string>("");
   const selectedTemplate = contentTemplates.find((item) => item.slug === params.templateSlug);
 
-  const generateAIContent = async (formData:FormData) =>{
-    setIsLoading(true)
+  const generateAIContent = async (formData: FormData) => {
+    setIsLoading(true);
     try {
-      let dataSet = {title:formData.get("title"),description:formData.get("description")}
-       
+      const dataSet = {
+        title: formData.get("title"),
+        description: formData.get("description")
+      };
+
       const selectedPrompt = selectedTemplate?.aiPrompt;
+      const finalAIPrompt = JSON.stringify(dataSet) + " ," + selectedPrompt;
 
-      const finalAIPrompt = JSON.stringify(dataSet) + " ," + selectedPrompt
+      const result = await chatSession.sendMessage(finalAIPrompt);
 
-      const result = await chatSession.sendMessage(finalAIPrompt)
-
-      setAIOutput(result.response.text())
-      const response = await axios.post("/api/",{
-        title:dataSet.title,
-        description:result.response.text(),
-        templateUsed:selectedTemplate?.name
-      })
-      setIsLoading(false)
-
-
-
-
-    } catch (error) {
-      console.log(error)
+      const aiResponse = await result.response.text();
+      setAIOutput(aiResponse);
       
+      await axios.post("/api", {
+        title: dataSet.title,
+        description: aiResponse,
+        templateUsed: selectedTemplate?.name
+      });
+      
+      setIsLoading(false);
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
     }
   }
 
-  const onSubmit = async (formData :FormData) =>{
-    generateAIContent(formData)
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    generateAIContent(formData);
   }
 
   return (
@@ -55,14 +58,14 @@ const TemplateSlug = ({ params }: { params: TemplateSlugProps }) => {
       <div className='mt-5 py-6 px-4 bg-white'>
         <h2 className='font-medium'>{selectedTemplate?.name}</h2>
       </div>
-      <form action={onSubmit}>
+      <form onSubmit={onSubmit}>
         <div className='flex flex-col gap-4 p-5 mt-5 bg-white'>
           {selectedTemplate?.form?.map((form) => (
             <div key={form.label}>
               <label>{form.label}</label>
               {form.field === 'input' ? (
                 <div className='mt-5'>
-                  <Input />
+                  <Input name='title' />
                 </div>
               ) : (
                 <div className='mt-5'>
@@ -73,12 +76,11 @@ const TemplateSlug = ({ params }: { params: TemplateSlugProps }) => {
           ))}
         </div>
         <Button className='mt-5' type='submit'>
-          {isLoading? <Loader className='animate-spin'/> : "Generate Content"}
-
+          {isLoading ? <Loader className='animate-spin' /> : "Generate Content"}
         </Button>
       </form>
       <div className='my-10'>
-        <Editor value={isLoading? "Genarating..." : aiOutput}/>
+        <Editor value={isLoading ? "Generating..." : aiOutput} />
       </div>
     </div>
   );
