@@ -16,7 +16,7 @@ datasource db {
 model AIOutput{
   id String @id @default(auto()) @map("_id") @db.ObjectId
   userId String
-  title String
+  title String?
   description String
   templateUsed String
   createdAt DateTime @default(now())
