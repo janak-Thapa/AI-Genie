@@ -22,8 +22,8 @@ const TemplateSlug = ({ params }: { params: TemplateSlugProps }) => {
     setIsLoading(true);
     try {
       const dataSet = {
-        title: formData.get("title"),
-        description: formData.get("description")
+        title: formData.get("title") as string,
+        description: formData.get("description") as string
       };
 
       const selectedPrompt = selectedTemplate?.aiPrompt;
@@ -42,7 +42,7 @@ const TemplateSlug = ({ params }: { params: TemplateSlugProps }) => {
       
       setIsLoading(false);
     } catch (error) {
-      console.error(error);
+      console.error("Error generating AI content:", error);
       setIsLoading(false);
     }
   }
