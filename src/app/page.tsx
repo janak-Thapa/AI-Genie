@@ -13,7 +13,7 @@ export default function Home() {
     <div className="flex flex-col min-h-[100dvh]">
       <header className="px-4 mt-5 lg:px-6 h-14 flex items-center">
         <Logo /> 
-        <nav className="ml-auto hidden lg:flex gap-4 sm:gap-6">
+        <nav className="ml-auto  lg:flex gap-4 sm:gap-6">
           <Auth /> 
         </nav>
       </header>

@@ -1,6 +1,6 @@
 "use client"
 import { Button } from "@/components/ui/button"
-import { Copy } from "lucide-react"
+import { ArrowLeft, Copy } from "lucide-react"
 import dynamic from "next/dynamic"
 import { useMemo } from "react"
 import 'react-quill/dist/quill.snow.css'
@@ -13,6 +13,7 @@ const Editor = ({value}:{value:string}) => {
   )
     return (
       <>
+      
       <Button className="mb-4"
       onClick={()=>navigator.clipboard.writeText(value)}
       ><Copy/>Copy</Button>

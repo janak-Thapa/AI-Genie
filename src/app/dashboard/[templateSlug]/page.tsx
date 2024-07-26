@@ -3,11 +3,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { contentTemplates } from '@/lib/contentTemplate';
-import { Loader } from 'lucide-react';
+import { ArrowLeft, Loader } from 'lucide-react';
 import React, { useState } from 'react';
 import Editor from './_components/Editor';
 import { chatSession } from '@/lib/geminiAI';
 import axios from 'axios';
+import Link from 'next/link';
 
 interface TemplateSlugProps {
   templateSlug: string;
@@ -54,6 +55,13 @@ const TemplateSlug = ({ params }: { params: TemplateSlugProps }) => {
   }
 
   return (
+    <div>
+      <Link href={"/dashboard"}>
+      <Button className='mt-5'><ArrowLeft/>Back</Button>
+      </Link>
+      
+
+    
     <div className='mx-5 py-2'>
       <div className='mt-5 py-6 px-4 bg-white'>
         <h2 className='font-medium'>{selectedTemplate?.name}</h2>
@@ -82,6 +90,7 @@ const TemplateSlug = ({ params }: { params: TemplateSlugProps }) => {
       <div className='my-10'>
         <Editor value={isLoading ? "Generating..." : aiOutput} />
       </div>
+    </div>
     </div>
   );
 }
