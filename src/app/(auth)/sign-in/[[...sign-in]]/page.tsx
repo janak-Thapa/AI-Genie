@@ -5,7 +5,7 @@ export default function Page() {
 
   
   <div className="flex items-center justify-center h-screen">
-  <SignIn />;
+  <SignIn />
 
   </div>
   )
